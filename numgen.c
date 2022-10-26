@@ -8,30 +8,34 @@
 
 int main(){
 
-    int lower = 1, upper = 52, count = 6, i = 0;
-    char cards[52][4],input[100];
-    int * a,b,c,d;
-    char cards1[100];
+    int lower = 1, upper = 52, count = 6, i = 0,j;
+    int cards[52][4];
+    int a,b,c,d;
+    char cards1[100],input[100];
     FILE * fp;
     FILE * fp1;
 
     fp = fopen("Card_List.csv","r");
 
-    do{
-    fscanf(fp,"%d,%d,%d,%d",a,b,c,d);
-    cards[i][0] = a;
-    cards[i][1] = &b;
-    cards[i][2] = &c;
-    cards[i][3] = &d;
-    }while(fgets(cards1,100,fp) != NULL);
-
-    for(i = 0; i < 52; i++){
-    printf("%d  %d  %d  %d\n",cards[i][0],cards[i][1],cards[i][2],cards[i][3]);
-    }
-
     if (fp == NULL){
         fprintf(stderr,"Card list did not open correctly.\nEXITING PROGRAM\n");
+        exit(3);
     }
+
+    do{
+        fscanf(fp,"%d,%d,%d,%d",&a,&b,&c,&d);
+        cards[i][0] = a;
+        cards[i][1] = b;
+        cards[i][2] = c;
+        cards[i][3] = d;
+        for (j = 0; j < 4; j++){
+        fprintf(stdout,"%*d",3,cards[i][j]);
+        }
+        printf("\n");
+        i++;
+    }while(fgets(cards1,100,fp) != NULL);
+
+    
 
     srand(time(0));
 
