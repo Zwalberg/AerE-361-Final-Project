@@ -7,7 +7,6 @@
 
 int main(){
     int i,j,card;
-    char cards[52][4],input[100];
     printf("Welcome to Blackjack\n");
 
 
