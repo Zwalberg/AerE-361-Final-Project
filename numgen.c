@@ -10,7 +10,7 @@ int main(){
 
     int lower = 1, upper = 52, count = 6, i = 0;
     char cards[52][4],input[100];
-    int * a,b,c,d;
+    int a,b,c,d;
     char cards1[100];
     FILE * fp;
     FILE * fp1;
@@ -18,11 +18,12 @@ int main(){
     fp = fopen("Card_List.csv","r");
 
     do{
-    fscanf(fp,"%d,%d,%d,%d",a,b,c,d);
+    fscanf(fp,"%d,%d,%d,%d",&a,&b,&c,&d);
     cards[i][0] = a;
-    cards[i][1] = &b;
-    cards[i][2] = &c;
-    cards[i][3] = &d;
+    cards[i][1] = b;
+    cards[i][2] = c;
+    cards[i][3] = d;
+    i++;
     }while(fgets(cards1,100,fp) != NULL);
 
     for(i = 0; i < 52; i++){
