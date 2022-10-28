@@ -46,8 +46,6 @@ int main(){
     printf("Player total: %d\n",player);
     printf("Dealer total: %d\n",dealer);
 
-    
-
 
 
 
