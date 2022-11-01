@@ -31,12 +31,12 @@ int main(){
     }while(fgets(cards1,100,fp) != NULL);
 
 
-    printf("Welcome to Blackjack\n");
+    printf("Welcome to Blackjack\n\n");
     for (i = 1; i <= 4; i++){
         int index = i-1;
-        deal[index] = card_draw(i);
-        printf("%d\n",deal[index]);
-        printf("\t%d %d\n",cards[deal[index]-1][1],cards[deal[index]-1][2]);
+        deal[index] = card_draw(4);
+       // printf("%d\n",deal[index]);
+        //printf("\t%d %d\n",cards[deal[index]-1][1],cards[deal[index]-1][2]);
     }
     
 
