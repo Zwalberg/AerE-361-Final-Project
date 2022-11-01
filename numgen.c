@@ -6,42 +6,22 @@
 #include<string.h>
 #include<time.h>
 
-int main(){
+int card_draw();
 
-    int lower = 1, upper = 52, count = 6, i = 0;
-    char cards[52][4],input[100];
-    int a,b,c,d;
-    char cards1[100];
-    FILE * fp;
-    FILE * fp1;
+int card_draw(int count){
+    int upper,lower,draw,i;
+    time_t t;
 
-    fp = fopen("Card_List.csv","r");
+    upper = 52;
+    lower = 1;
 
-    do{
-    fscanf(fp,"%d,%d,%d,%d",&a,&b,&c,&d);
-    cards[i][0] = a;
-    cards[i][1] = b;
-    cards[i][2] = c;
-    cards[i][3] = d;
-    i++;
-    }while(fgets(cards1,100,fp) != NULL);
+    srand(time(NULL));
 
-    for(i = 0; i < 52; i++){
-    printf("%d  %d  %d  %d\n",cards[i][0],cards[i][1],cards[i][2],cards[i][3]);
+    for(i = 0; i < count; i++){
+        draw = (rand() % (upper - lower + 1)) + lower;
+        //printf(" %d",draw);
     }
+    //printf("\n");
 
-    if (fp == NULL){
-        fprintf(stderr,"Card list did not open correctly.\nEXITING PROGRAM\n");
-    }
-
-    srand(time(0));
-
-    printf("The random numbers are: ");
-    for (int i = 0; i < count; i++) {
-        int num = (rand() % (upper - lower + 1)) + lower;
-        printf("%d ", num);
-    }
-    printf("\n");
-    
- return 0;
+    return draw;
 }
