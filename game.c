@@ -15,9 +15,11 @@ short current_count;
 
 void print_cards();
 void red();
+void green();
+void yellow();
 void reset();
 void print_menu();
-void high_val_print();
+void high_val_print(short face);
 
 
 int main(){
@@ -82,11 +84,11 @@ int main(){
             if(cards[new_card][2] == 11 && player_total > 21){
                 player_total -= 10;
             }
-            printf("\e[1;1H\e[2J");
+            
             //printf("\tDEBUG: NEW_CARD is %d\t%d\n\n",new_card,player_hand[player_cards]);
             player_cards++;
             print_cards(player_total,player_cards,dealer_total,dealer_cards,play);
-            if(player_total > 21){\
+            if(player_total > 21){
                 red();
                 printf("Player Busts!\nDEALER WINS\n");
                 reset();
@@ -123,13 +125,28 @@ int main(){
 void print_cards(int player_total,int player_cards,int dealer_total,int dealer_cards,int play){
 
     int i;
+    short card;
+    
+    printf("\e[1;1H\e[2J");
 
-    printf("Dealer: %d  %d\nDealer Total: %d\n\n",cards[deal[1]-1][1],cards[deal[3]-1][1],dealer_total);
+    printf("Dealer: ");
+    for(i = 0; i < dealer_cards; i++){
+        card = cards[dealer_hand[i]][1];
+        if(card == 1 || card > 10){
+            high_val_print(card);
+        }
+        else{
+            printf("%d  ",cards[dealer_hand[i]][1]);
+        }
+        
+    }
+    printf("\nDealer Total: %d\n\n",dealer_total);
 
     printf("Player: ");
     for(i = 0; i < player_cards; i++){
-        if(player_hand[i] == 1 || player_hand[i] > 10){
-            high_val_print(player_hand[i]);
+        card = cards[player_hand[i]][1];
+        if(card == 1 || card > 10){
+            high_val_print(card);
         }
         else{
             printf("%d  ",cards[player_hand[i]][1]);
@@ -148,17 +165,25 @@ void green(){
   printf("\033[1;32m");
 }
 
+void yellow(){
+    printf("\033[0;33m");
+}
+
 void reset() {
   printf("\033[0m");
 }
 
-void high_val_print(int card){
+void high_val_print(short face){
     char card_face[1] = "0";
-    switch (card){
-        case 1: card_face[0] = 'A';
-        case 11: card_face[0] = 'J';
-        case 12: card_face[0] = 'Q';
-        case 13: card_face[0] = 'K';
+    /*yellow();
+    printf("\tDEBUG: face = %d\n",face);
+    reset();*/
+    switch (face){
+        case 1: card_face[0] = 'A'; break;
+        case 11: card_face[0] = 'J'; break;
+        case 12: card_face[0] = 'Q'; break;
+        case 13: card_face[0] = 'K'; break;
+        default: card_face[0] = 'N'; break;
     }
     printf("%s  ",card_face);
    
