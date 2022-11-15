@@ -11,10 +11,14 @@ int cards[52][4];
 short deal[4];
 short player_hand[6];
 short dealer_hand[6];
+short current_count;
 
 void print_cards();
 void red();
 void reset();
+void print_menu();
+void high_val_print();
+
 
 int main(){
     short i,j,player_total,dealer_total,play = 1,new_card;
@@ -124,7 +128,13 @@ void print_cards(int player_total,int player_cards,int dealer_total,int dealer_c
 
     printf("Player: ");
     for(i = 0; i < player_cards; i++){
-    printf("%d  ",cards[player_hand[i]][1]);
+        if(player_hand[i] == 1 || player_hand[i] > 10){
+            high_val_print(player_hand[i]);
+        }
+        else{
+            printf("%d  ",cards[player_hand[i]][1]);
+        }
+        
     }
     printf("\nPlayer Total: %d\n",player_total);
 }
@@ -141,3 +151,16 @@ void green(){
 void reset() {
   printf("\033[0m");
 }
+
+void high_val_print(int card){
+    char card_face[1] = "0";
+    switch (card){
+        case 1: card_face[0] = 'A';
+        case 11: card_face[0] = 'J';
+        case 12: card_face[0] = 'Q';
+        case 13: card_face[0] = 'K';
+    }
+    printf("%s  ",card_face);
+   
+}
+
