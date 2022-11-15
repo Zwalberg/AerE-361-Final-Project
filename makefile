@@ -6,7 +6,8 @@ blackjack:
 
 run_game:
 	@gcc game.c -o blackjack.out
-	@./blackjack.game
+	@echo "Running game\n"
+	@./blackjack.out
 
 clean:
-	rm numgen.out blackjack.game
+	rm numgen.out blackjack.out
