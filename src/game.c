@@ -6,6 +6,7 @@
 #include<string.h>
 #include"numgen.c"
 #include<unistd.h>
+//#include"../include/card_list.h"
 
 int cards[52][4];
 short deal[4];
@@ -78,13 +79,14 @@ int main(){
         printf("\tEnter 1 to HIT or 0 to STAND: ");
         scanf(" %d",&input);
         if(input == 1){
-            new_card = card_draw(1) - 1;
-            player_hand[player_cards] = cards[new_card][1];
+            new_card = card_draw(1) -1;
+             //printf("\tDEBUG: NEW_CARD is %d\n\tCSV value is %d\n\tcard is %d\n\tvalue is %d\n\n",new_card,new_card+1,cards[new_card][1],cards[new_card][2]);
+            player_hand[player_cards] = cards[new_card-1][1];
+            //printf("\tDEBUG: Last card in player hand = %d\n",player_hand[player_cards]);
             player_total += cards[new_card][2];
             if(cards[new_card][2] == 11 && player_total > 21){
                 player_total -= 10;
             }
-            
             //printf("\tDEBUG: NEW_CARD is %d\t%d\n\n",new_card,player_hand[player_cards]);
             player_cards++;
             print_cards(player_total,player_cards,dealer_total,dealer_cards,play);
