@@ -1,17 +1,18 @@
-Introduction
+# Introduction
 
-Features 
+# Features 
 
-Problem Statement
+# Problem Statement:
 
-Problem Solution 
 
-Status
+# Problem Solution 
 
-Lessons Learned
+# Status
 
-Results 
+# Lessons Learned
 
-Future Work 
+# Results 
+
+# Future Work 
 
 (Proper References, Proper Images, Code in the Appendix)
