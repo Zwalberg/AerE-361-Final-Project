@@ -18,6 +18,28 @@ Adafruit_Arcada arcada;
 
 #define WHITELED 43
 
+//define a callback for key presses
+NeoKey1x4Callback blink(keyEvent evt) {
+  uint8_t key = evt.bit.NUM;
+  
+  if (evt.bit.EDGE == SEESAW_KEYPAD_EDGE_RISING) {
+    Serial.print("Key press ");
+    Serial.println(key);
+    neokey.pixels.setPixelColor(key, Wheel(map(key, 0, neokey.pixels.numPixels(), 0, 255)));
+    
+  } else if (evt.bit.EDGE == SEESAW_KEYPAD_EDGE_FALLING) {
+    Serial.print("Key release ");
+    Serial.println(key);
+
+    neokey.pixels.setPixelColor(key, 0);
+  }
+
+  // Turn on/off the neopixels!
+  neokey.pixels.show();
+  return 0;
+}
+
+
 void setup(void) {
   Serial.begin(9600);
   arcada.arcadaBegin();
@@ -27,6 +49,29 @@ void setup(void) {
   arcada.display->setTextColor(ARCADA_WHITE);
   pinMode(WHITELED, OUTPUT);
   digitalWrite(WHITELED, LOW);
+  //-------------------------------------------
+  //For Neo Key
+   Serial.begin(115200);
+  while (! Serial) delay(10);
+   
+  if (! neokey.begin(0x30)) {     // begin with I2C address, default is 0x30
+    Serial.println("Could not start NeoKey, check wiring?");
+    while(1) delay(10);
+  }
+  
+  Serial.println("NeoKey started!");
+
+  // Pulse all the LEDs on to show we're working
+  for (uint16_t i=0; i<neokey.pixels.numPixels(); i++) {
+    neokey.pixels.setPixelColor(i, 0x808080); // make each LED white
+    neokey.pixels.show();
+    delay(50);
+  }
+  for (uint16_t i=0; i<neokey.pixels.numPixels(); i++) {
+    neokey.pixels.setPixelColor(i, 0x000000);
+    neokey.pixels.show();
+    delay(50);
+  }
 }
 
 void loop() {
@@ -44,6 +89,9 @@ void loop() {
   
   //if button a is pushed, remove the card counter
   //TODO: see if there is a way to remove the text
+
+
+
   if (buttons_pressed & ARCADA_BUTTONMASK_A) {
     arcada.displayBegin();
     arcada.setBacklight(255);
@@ -56,38 +104,59 @@ void loop() {
   winstatus = 0;
   windisplay(winstatus);     
   }
- 
-    uint8_t buttons = neokey.read();
+ //---------------------------
+ uint8_t buttons = neokey.read();
 
- 
+  // Check each button, if pressed, light the matching neopixel
   
   if (buttons & (1<<0)) {
     Serial.println("Button A");
+    neokey.pixels.setPixelColor(0, 0xFF0000); // red
+    counterdisplay();
   } else {
-   arcada.display->fillScreen(ARCADA_RED);
+    neokey.pixels.setPixelColor(0, 0);
   }
 
   if (buttons & (1<<1)) {
     Serial.println("Button B");
+    neokey.pixels.setPixelColor(1, 0xFFFF00); // yellow
   } else {
-    arcada.display->fillScreen(ARCADA_GREEN);
+    neokey.pixels.setPixelColor(1, 0);
   }
   
   if (buttons & (1<<2)) {
     Serial.println("Button C");
+    neokey.pixels.setPixelColor(2, 0x00FF00); // green
   } else {
-    arcada.display->fillScreen(ARCADA_BLUE);
+    neokey.pixels.setPixelColor(2, 0);
   }
 
   if (buttons & (1<<3)) {
     Serial.println("Button D");
+    neokey.pixels.setPixelColor(3, 0x00FFFF); // blue
   } else {
-    arcada.display->fillScreen(ARCADA_RED);
+    neokey.pixels.setPixelColor(3, 0);
   }  
 
   neokey.pixels.show();
+  
+  delay(10);
+   
 }
-
+// Input a value 0 to 255 to get a color value.
+// The colors are a transition r - g - b - back to r.
+uint32_t Wheel(byte WheelPos) {
+  if(WheelPos < 85) {
+   return seesaw_NeoPixel::Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+  } else if(WheelPos < 170) {
+   WheelPos -= 85;
+   return seesaw_NeoPixel::Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  } else {
+   WheelPos -= 170;
+   return seesaw_NeoPixel::Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  }
+  return 0;
+}
 void carddisplay() {
   arcada.display->setTextSize(2);
   arcada.display->setCursor(0,0); 
@@ -162,3 +231,4 @@ void windisplay(int winstatus) {
    // winstatus = 0;
   }
 }
+
