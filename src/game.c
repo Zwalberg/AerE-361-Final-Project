@@ -79,7 +79,7 @@ int main(){
         printf("\tEnter 1 to HIT or 0 to STAND: ");
         scanf(" %d",&input);
         if(input == 1){
-            new_card = card_draw(1) -1;
+            new_card = card_draw(1) - 1;
              //printf("\tDEBUG: NEW_CARD is %d\n\tCSV value is %d\n\tcard is %d\n\tvalue is %d\n\n",new_card,new_card+1,cards[new_card][1],cards[new_card][2]);
             player_hand[player_cards] = cards[new_card-1][1];
             //printf("\tDEBUG: Last card in player hand = %d\n",player_hand[player_cards]);
