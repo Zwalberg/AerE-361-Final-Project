@@ -100,10 +100,10 @@ void loop() {
     carddisplay();
   }
 
-  if (winstatus ==0){
-  winstatus = 0;
-  windisplay(winstatus);     
-  }
+ // if (winstatus ==0){
+ // winstatus = 0;
+     
+  
  //---------------------------
  uint8_t buttons = neokey.read();
 
@@ -141,7 +141,7 @@ void loop() {
   neokey.pixels.show();
   
   delay(10);
-   
+  windisplay(winstatus);
 }
 // Input a value 0 to 255 to get a color value.
 // The colors are a transition r - g - b - back to r.
@@ -210,13 +210,14 @@ void windisplay(int winstatus) {
     arcada.display->setTextSize(6);
     arcada.display->setCursor(0,100);
     arcada.display->println("You Win!");
-    for (int i=1;i<5;i++) {   
-      digitalWrite(WHITELED, 1);
-      delay(500);
-      digitalWrite(WHITELED, LOW);
-      delay(500);            
-    }
-    //winstatus = 0;       
+
+    //winstatus = 0;  
+     neokey.pixels.setPixelColor(0, 0x00FF00); // red
+    neokey.pixels.setPixelColor(1, 0x00FF00); // red
+
+    neokey.pixels.setPixelColor(2, 0x00FF00); // red
+    neokey.pixels.setPixelColor(3, 0x00FF00); // 
+    neokey.pixels.show();     
   }
   if (winstatus == 2) {
     arcada.displayBegin();
@@ -227,8 +228,14 @@ void windisplay(int winstatus) {
     arcada.display->setTextSize(5);
     arcada.display->setCursor(0,100);
     arcada.display->println("You Lose!");
-    tone(ARCADA_AUDIO_OUT, 2000, 100);
+    
+    neokey.pixels.setPixelColor(0, 0xFF0000); // red
+    neokey.pixels.setPixelColor(1, 0xFF0000); // red
+
+    neokey.pixels.setPixelColor(2, 0xFF0000); // red
+    neokey.pixels.setPixelColor(3, 0xFF0000); // 
+    neokey.pixels.show();
+    //tone(ARCADA_AUDIO_OUT, 2000, 100);
    // winstatus = 0;
   }
 }
-
