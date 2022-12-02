@@ -83,6 +83,7 @@ int main(){
             new_card = card_draw(1) - 1;
             player_hand[player_cards] = cards[new_card][1];
             player_total += cards[player_hand[player_cards]][2];
+            sleep(1);
             if(cards[new_card][2] == 11 && player_total > 21){
                 player_total -= 10;
             }
@@ -151,13 +152,13 @@ int main(){
 		play = 0;
 	    }
 	    else if(dealer_total < 17){
-            sleep(1);
 	      	new_card = card_draw(1) - 1;
 		dealer_hand[dealer_cards] = cards[new_card][1];
-		dealer_total += cards[dealer_cards][2];
+		dealer_total += cards[dealer_hand[dealer_cards]][2];
                 if(cards[new_card][2] == 11 && dealer_total > 21){
                     dealer_total -= 10;
 		}
+        sleep(1);
 		dealer_cards++;
 		print_cards(player_total,player_cards,dealer_total,dealer_cards,play,current_count);
 	    }
