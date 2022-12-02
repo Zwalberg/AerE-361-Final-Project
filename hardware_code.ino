@@ -84,6 +84,7 @@ uint32_t Wheel(byte WheelPos) {
    WheelPos -= 170;
    return seesaw_NeoPixel::Color(0, WheelPos * 3, 255 - WheelPos * 3);
   }
+}
 
 void print_cards(int player_total,int player_cards,int dealer_total,int dealer_cards,int play,short dealer_hand[], short player_hand[]) {
  arcada.display->setTextSize(2);
