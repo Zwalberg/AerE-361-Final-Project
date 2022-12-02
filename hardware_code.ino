@@ -61,9 +61,10 @@ void setup(void) {
 void loop() {
   //stores button presses
   uint8_t buttons_pressed = arcada.readButtons();
+short current_count=7;
   //if button B is pushed, display the card counter
  if (buttons_pressed & ARCADA_BUTTONMASK_B) {
-    //counterdisplay(current_count);
+    counterdisplay(current_count);
   }
   //if button a is pushed, remove the card counter
   if (buttons_pressed & ARCADA_BUTTONMASK_A) {
@@ -77,7 +78,6 @@ void loop() {
 
 short deal[4];
 
-short current_count;
 
 short player_total = 10;
 short dealer_total = 15;
@@ -88,7 +88,7 @@ int player_cards = 4;
 short play = 1;
 
 print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand);
-green();
+
 //game()
 }
 
@@ -369,38 +369,6 @@ short current_count;
 
     return 0;
 }
-
-/*void print_cards (int player_total,int player_cards,int dealer_total, int dealer_cards, int play,int dealer_hand,int player_hand){
-    int i;
-    short card;
-    
-    printf("\e[1;1H\e[2J");
-    printf("Dealer: ");
-    for(i = 0; i < dealer_cards; i++){
-        card = cards[dealer_hand[i]][1];
-        if(card == 1 || card > 10){
-            high_val_print(card);
-        }
-        else{
-            printf("%d  ",cards[dealer_hand[i]][1]);
-        }
-        
-    }
-    printf("\nDealer Total: %d\n\n",dealer_total);
-    printf("Player: ");
-    for(i = 0; i < player_cards; i++){
-        card = cards[player_hand[i]][1];
-        if(card == 1 || card > 10){
-            high_val_print(card);
-        }
-        else{
-            printf("%d  ",cards[player_hand[i]][1]);
-        }
-        
-    }
-    printf("\nPlayer Total: %d\n",player_total);
-} 
-*/
 
 void red() {
   printf("\033[1;31m");
