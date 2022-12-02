@@ -4,10 +4,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include"src/numgen.c"
+#include"numgen.c"
 #include<unistd.h>
 
-int cards[52][4];
+//int cards[52][4];
 short deal[4];
 short player_hand[6];
 short dealer_hand[6];
@@ -21,6 +21,60 @@ void reset();
 void print_menu();
 void high_val_print(short face);
 
+int cards[52][4] = {
+      {1,1,11,0},
+      {2,2,2,0},
+      {3,3,3,0},
+      {4,4,4,0},
+      {5,5,5,0},
+      {6,6,6,0},
+      {7,7,7,0},
+      {8,8,8,0},
+      {9,9,9,0},
+      {10,10,10,0},
+      {11,11,10,0},
+      {12,12,10,0},
+      {13,13,10,0},
+      {14,1,11,0},
+      {15,2,2,0},
+      {16,3,3,0},
+      {17,4,4,0},
+      {18,5,5,0},
+      {19,6,6,0},
+      {20,7,7,0},
+      {21,8,8,0},
+      {22,9,9,0},
+      {23,10,10,0},
+      {24,11,10,0},
+      {25,12,10,0},
+      {26,13,10,0},
+      {27,1,11,0},
+      {28,2,2,0},
+      {29,3,3,0},
+      {30,4,4,0},
+      {31,5,5,0},
+      {32,6,6,0},
+      {33,7,7,0},
+      {34,8,8,0},
+      {35,9,9,0},
+      {36,10,10,0},
+      {37,11,10,0},
+      {38,12,10,0},
+      {39,13,10,0},
+      {40,1,11,0},
+      {41,2,2,0},
+      {42,3,3,0},
+      {43,4,4,},
+      {44,5,5,0},
+      {45,6,6,0},
+      {46,7,7,0},
+      {47,8,8,0},
+      {48,9,9,0},
+      {49,10,10,0},
+      {50,11,10,0},
+      {51,12,10,0},
+      {52,13,10,0},
+    };
 
 int main(){
     short i,j,player_total,dealer_total,play = 1,new_card;
@@ -34,7 +88,7 @@ int main(){
         fprintf(stderr,"Card list did not open correctly.\nEXITING PROGRAM\n");
         exit(3);
     }
-
+    /*
     do{
         fscanf(fp,"%d,%d,%d,%d",&a,&b,&c,&d);
         cards[i][0] = a;
@@ -43,7 +97,7 @@ int main(){
         cards[i][3] = d;
         i++;
     }while(fgets(cards1,100,fp) != NULL);
-
+    */
 
     printf("Welcome to Blackjack\n\n");
     for (i = 1; i <= 4; i++){
@@ -73,8 +127,7 @@ int main(){
     
     int player_cards = 2;
     int dealer_cards = 2;
-    
-
+    int dealer_loop=0;
     print_cards(player_total,player_cards,dealer_total,dealer_cards,play,current_count);
 
     do{
@@ -85,11 +138,10 @@ int main(){
             player_hand[player_cards] = cards[new_card][1];
             player_total += cards[player_hand[player_cards]][2];
             sleep(1);
-            for(i=0;i<player_cards;i++){
-            if(cards[i][2] == 11 && player_total > 21){
+            if(cards[new_card][2] == 11 && player_total > 21){
                 player_total -= 10;
             }
-            }
+            
             //printf("\tDEBUG: NEW_CARD is %d\t%d\n\n",new_card,player_hand[player_cards]);
             player_cards++;
             print_cards(player_total,player_cards,dealer_total,dealer_cards,play,current_count);
@@ -122,7 +174,10 @@ int main(){
     
     do{
       //print_cards(player_total,player_cards,dealer_total,dealer_cards,play);
-     if(dealer_total == player_total){
+        //red();
+        //printf("\ndealer logic start\n");
+        //reset();
+        if(dealer_total == player_total){
             yellow();
             printf("Player has pushed with Dealer\n");
             play =0;
@@ -148,14 +203,13 @@ int main(){
 	        printf("Player's total greater than dealer's!\n\tPlayer WINS\n");
 		play = 0;
 	    }
+    }
+        
+        if(cards[new_card][2] == 11 && dealer_total > 21){
+                dealer_total -= 10;
+            }
 
-        else if(dealer_total==17){
-        for(i=0;i< dealer_cards;i++){
-        if(dealer_hand[i]==11){
-            dealer_total -= 10;
-        }
-        }
-        }
+        
 
 	    else if(dealer_total < 17){
 	      	new_card = card_draw(1) - 1;
@@ -168,13 +222,25 @@ int main(){
 		dealer_cards++;
 		print_cards(player_total,player_cards,dealer_total,dealer_cards,play,current_count);
 	    }
+
         else if(dealer_total > 21){
 	    green();
 	    printf("Dealer Bust!\n\tPlayer WINS\n");
 	    play = 0;
 	}
-	}
-    }while (play == 1);
+
+
+    if(dealer_loop>15){
+        printf("Error: Dealer logic loop, exiting");
+        exit(124);
+    }
+    dealer_loop++;
+
+
+
+
+
+	}while (play == 1);
     
 
     //printf("Player total: %d\n",player);
