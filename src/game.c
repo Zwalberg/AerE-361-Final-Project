@@ -4,13 +4,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include"src/numgen.c"
+#include "numgen.c"
 #include<unistd.h>
-<<<<<<< HEAD
 #include<stdbool.h>
 //#include"../include/card_list.h"
-=======
->>>>>>> 6984beb728ea18f156e2f7ef48445b054c133c1b
 
 int cards[52][4];
 short deal[4];
@@ -80,7 +77,6 @@ int main(){
     int dealer_cards = 2;
     
 
-<<<<<<< HEAD
     if(player_total == 21 && dealer_total != 21){
         green();
         printf("BLACKJACK!\nPLAYER WINS!\n");
@@ -93,36 +89,24 @@ int main(){
         reset();
         exit(4);
     }
-<<<<<<< HEAD
+
     else if(player_total == 21 && dealer_total == 21){
         printf("Player and Dealer both have blackjack\nIt is a PUSH!\n");
     }
-=======
->>>>>>> 61a90b524eb7edbd8111f74753d73c425729cfb8
-=======
+
     print_cards(player_total,player_cards,dealer_total,dealer_cards,play,current_count);
->>>>>>> 6984beb728ea18f156e2f7ef48445b054c133c1b
 
     do{
         printf("\tEnter 1 to HIT or 0 to STAND: \n\tTo check High-Lo value Enter 2.\n\t");
         scanf(" %d",&input);
         if(input == 1){
             new_card = card_draw(1) - 1;
-<<<<<<< HEAD
              //printf("\tDEBUG: NEW_CARD is %d\n\tCSV value is %d\n\tcard is %d\n\tvalue is %d\n\n",new_card,new_card+1,cards[new_card][1],cards[new_card][2]);
             player_hand[player_cards] = cards[new_card][1];
             //printf("\tDEBUG: Last card in player hand = %d\n",player_hand[player_cards]);
             player_total += cards[player_hand[player_cards]][2];
             if(cards[new_card][2] == 11 && player_total > 21){
-=======
-            player_hand[player_cards] = cards[new_card][1];
-            player_total += cards[player_hand[player_cards]][2];
-            sleep(1);
-            for(i=0;i<player_cards;i++){
-            if(cards[i][2] == 11 && player_total > 21){
->>>>>>> 6984beb728ea18f156e2f7ef48445b054c133c1b
                 player_total -= 10;
-            }
             }
             //printf("\tDEBUG: NEW_CARD is %d\t%d\n\n",new_card,player_hand[player_cards]);
             player_cards++;
