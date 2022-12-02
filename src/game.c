@@ -6,6 +6,7 @@
 #include<string.h>
 #include"numgen.c"
 #include<unistd.h>
+#include<stdbool.h>
 //#include"../include/card_list.h"
 
 int cards[52][4];
@@ -88,6 +89,9 @@ int main(){
         reset();
         exit(4);
     }
+    else if(player_total == 21 && dealer_total == 21){
+        printf("Player and Dealer both have blackjack\nIt is a PUSH!\n");
+    }
 
     do{
         printf("\tEnter 1 to HIT or 0 to STAND: ");
@@ -95,9 +99,9 @@ int main(){
         if(input == 1){
             new_card = card_draw(1) - 1;
              //printf("\tDEBUG: NEW_CARD is %d\n\tCSV value is %d\n\tcard is %d\n\tvalue is %d\n\n",new_card,new_card+1,cards[new_card][1],cards[new_card][2]);
-            player_hand[player_cards] = cards[new_card-1][1];
+            player_hand[player_cards] = cards[new_card][1];
             //printf("\tDEBUG: Last card in player hand = %d\n",player_hand[player_cards]);
-            player_total += cards[new_card][2];
+            player_total += cards[player_hand[player_cards]][2];
             if(cards[new_card][2] == 11 && player_total > 21){
                 player_total -= 10;
             }
