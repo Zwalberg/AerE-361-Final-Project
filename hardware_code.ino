@@ -3,7 +3,7 @@ Arcada graphicstest (Display, Buttons)
 */
 
 #include "Adafruit_Arcada.h"
-#include "game.c" 
+//#include "C:\Users\vflem\OneDrive\Desktop\AerE361\game.c" 
 #include <Adafruit_NeoKey_1x4.h>   
 #include <seesaw_neopixel.h>
 Adafruit_Arcada arcada; 
@@ -37,7 +37,9 @@ void setup(void) {
   arcada.setBacklight(255);
   arcada.display->fillScreen(ARCADA_BLACK);
   arcada.display->setTextColor(ARCADA_WHITE);
-  while (! Serial) delay(10);
+
+  //----------------------------------------------
+  //while (! Serial) delay(10);
   if (! neokey.begin(0x30)) {     // begin with I2C address, default is 0x30
     Serial.println("Could not start NeoKey, check wiring?");
     while(1) delay(10);
@@ -61,7 +63,7 @@ void loop() {
   uint8_t buttons_pressed = arcada.readButtons();
   //if button B is pushed, display the card counter
  if (buttons_pressed & ARCADA_BUTTONMASK_B) {
-    counterdisplay(current_count);
+    //counterdisplay(current_count);
   }
   //if button a is pushed, remove the card counter
   if (buttons_pressed & ARCADA_BUTTONMASK_A) {
@@ -71,7 +73,23 @@ void loop() {
     arcada.display->setTextColor(ARCADA_WHITE);
     //carddisplay();
   }
-  main();  
+  
+
+short deal[4];
+
+short current_count;
+
+short player_total = 10;
+short dealer_total = 15;
+short dealer_hand[6] = {10,5,9};
+int dealer_cards = 3;
+short player_hand[6] = {11,3,8,12};
+int player_cards = 4;
+short play = 1;
+
+print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand);
+green();
+//game()
 }
 
 uint32_t Wheel(byte WheelPos) {
@@ -203,7 +221,15 @@ void losedisplay() {
     neokey.pixels.show();
 }
 
-int main(){
+int game(){
+ 
+  
+int cards[52][4];
+short deal[4];
+short player_hand[6];
+short dealer_hand[6];
+short current_count;
+
     short i,j,player_total,dealer_total,play = 1,new_card;
     int a,b,c,d,input;
     char cards1[100];
@@ -344,7 +370,7 @@ int main(){
     return 0;
 }
 
-/* print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand);{
+/*void print_cards (int player_total,int player_cards,int dealer_total, int dealer_cards, int play,int dealer_hand,int player_hand){
     int i;
     short card;
     
@@ -373,8 +399,8 @@ int main(){
         
     }
     printf("\nPlayer Total: %d\n",player_total);
-} */
-
+} 
+*/
 
 void red() {
   printf("\033[1;31m");
@@ -383,6 +409,7 @@ void red() {
 
     neokey.pixels.setPixelColor(2, 0xFF0000); // red
     neokey.pixels.setPixelColor(3, 0xFF0000); // 
+    neokey.pixels.show();
 }
 
 void green(){
@@ -392,6 +419,7 @@ void green(){
 
     neokey.pixels.setPixelColor(2, 0x00FF00); // green
     neokey.pixels.setPixelColor(3, 0x00FF00); // 
+    neokey.pixels.show();
 }
 
 void yellow(){
@@ -400,6 +428,7 @@ void yellow(){
     neokey.pixels.setPixelColor(1, 0xFFFF00); // yellow
     neokey.pixels.setPixelColor(2, 0xFFFF00); // yellow
     neokey.pixels.setPixelColor(3, 0xFFFF00); // yellow
+    neokey.pixels.show();
 }
 
 void reset() {
