@@ -89,9 +89,12 @@ int main(){
         reset();
         exit(4);
     }
+<<<<<<< HEAD
     else if(player_total == 21 && dealer_total == 21){
         printf("Player and Dealer both have blackjack\nIt is a PUSH!\n");
     }
+=======
+>>>>>>> 61a90b524eb7edbd8111f74753d73c425729cfb8
 
     do{
         printf("\tEnter 1 to HIT or 0 to STAND: ");

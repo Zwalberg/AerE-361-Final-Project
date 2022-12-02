@@ -1,18 +1,12 @@
-ODIR = bin
-SRC = src
-CC = gcc
-GAMEEXE = blackjack.out
-
-
 numgen:
-	$(CC) $(SRC)/numgen.c -o $(ODIR)/numgen.out
+	gcc numgen.c -o numgen.out
 
 blackjack:
-	$(CC) $(SRC)/game.c -o $(ODIR)/$(GAMEEXE)
+	gcc game.c -o blackjack.out
 
-run_game: blackjack
-	@echo "Running game\n"
-	@./$(ODIR)/$(GAMEEXE)
+run_game:
+	@gcc game.c -o blackjack.out
+	@./blackjack.out
 
 clean:
-	@find . -type f -name '*.out' -delete
+	rm numgen.out blackjack.out
