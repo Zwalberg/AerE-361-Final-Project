@@ -6,7 +6,6 @@
 #include<string.h>
 #include"numgen.c"
 #include<unistd.h>
-//#include"../include/card_list.h"
 
 int cards[52][4];
 short deal[4];
@@ -21,7 +20,6 @@ void yellow();
 void reset();
 void print_menu();
 void high_val_print(short face);
-int multiple_draw_check(int card);
 
 
 int main(){
@@ -76,31 +74,17 @@ int main(){
     
     print_cards(player_total,player_cards,dealer_total,dealer_cards,play);
 
-    if(player_total == 21 && dealer_total != 21){
-        green();
-        printf("BLACKJACK!\nPLAYER WINS!\n");
-        reset();
-        exit(3);
-    }
-    else if(dealer_total == 21){
-        red();
-        printf("Dealer has BLACKJACK\nDEALER WINS!\n");
-        reset();
-        exit(4);
-    }
-
     do{
         printf("\tEnter 1 to HIT or 0 to STAND: ");
         scanf(" %d",&input);
         if(input == 1){
             new_card = card_draw(1) - 1;
-             //printf("\tDEBUG: NEW_CARD is %d\n\tCSV value is %d\n\tcard is %d\n\tvalue is %d\n\n",new_card,new_card+1,cards[new_card][1],cards[new_card][2]);
-            player_hand[player_cards] = cards[new_card-1][1];
-            //printf("\tDEBUG: Last card in player hand = %d\n",player_hand[player_cards]);
+            player_hand[player_cards] = cards[new_card][1];
             player_total += cards[new_card][2];
             if(cards[new_card][2] == 11 && player_total > 21){
                 player_total -= 10;
             }
+            
             //printf("\tDEBUG: NEW_CARD is %d\t%d\n\n",new_card,player_hand[player_cards]);
             player_cards++;
             print_cards(player_total,player_cards,dealer_total,dealer_cards,play);
@@ -116,9 +100,8 @@ int main(){
             }
         }
         else if(input == 0){
-            //printf("\e[1;1H\e[2J");
+            printf("\e[1;1H\e[2J");
             printf("\tDEALER PLAYS OUT\n");
-            sleep(1);
             play = 0;
         }
         else{
@@ -127,9 +110,8 @@ int main(){
     }while (play == 1);
 
     print_cards(player_total,player_cards,dealer_total,dealer_cards,play);
-    
     play = 1;
-
+    
     do{
       //print_cards(player_total,player_cards,dealer_total,dealer_cards,play);
         if(dealer_total > 21){
@@ -154,9 +136,8 @@ int main(){
 		play = 0;
 	    }
 	    else if(dealer_total < 17){
-            sleep(1);
 	      	new_card = card_draw(1) - 1;
-		dealer_hand[dealer_cards] = cards[new_card-1][1];
+		dealer_hand[dealer_cards] = cards[new_card][1];
 		dealer_total += cards[new_card][2];
                 if(cards[new_card][2] == 11 && dealer_total > 21){
                     dealer_total -= 10;
@@ -166,7 +147,7 @@ int main(){
 	    }
 	}
     }while (play == 1);
-
+    
 
     //printf("Player total: %d\n",player);
     //printf("Dealer total: %d\n",dealer);
@@ -239,16 +220,4 @@ void high_val_print(short face){
     }
     printf("%s  ",card_face);
    
-}
-
-int multiple_draw_check(int card){
-   int check;
-   if (cards[card][3]  < 4){
-        check = 1;
-        cards[card][3] += 1;
-   }
-   else{
-        check = 0;
-   }
-   return check;
 }
