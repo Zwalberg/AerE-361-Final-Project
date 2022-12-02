@@ -15,7 +15,7 @@ short player_hand[6];
 short dealer_hand[6];
 short current_count;
 
-void print_cards();
+void print_cards(int player_total,int player_cards,int dealer_total,int dealer_cards,bool player_stat,int cardCount);
 void red();
 void green();
 void yellow();
@@ -28,7 +28,7 @@ int main(){
     short i,j,player_total,dealer_total,new_card;
     int a,b,c,d,input;
     char cards1[100];
-    bool player_done = false;
+    bool player_done = false,dealer_done = false,play = true,excon = false;
     FILE * fp;
 
     fp = fopen("Card_List.csv","r");
@@ -47,8 +47,21 @@ int main(){
         i++;
     }while(fgets(cards1,100,fp) != NULL);
 
-
+    printf("\e[1;1H\e[2J");
     printf("Welcome to Blackjack\n\n");
+    printf("Would you like to play?\n\tInput 1 for yes 0 for no: ");
+    scanf(" %d",&input);
+    if (input == 0){
+        printf("Ok. Goodbye\n");
+        exit(3);
+    }
+
+ do{
+    player_done = false;
+    dealer_done = false;
+    player_total = 0;
+    dealer_total = 0;
+    printf("\e[1;1H\e[2J");
     for (i = 1; i <= 4; i++){
         int index = i-1;
         //printf("Card: %d\n",card_draw(i));
@@ -71,27 +84,30 @@ int main(){
       player_total += cards[player_hand[i]][2]; 
       current_count += checkVal(cards[player_hand[i]][2]);
       dealer_total += cards[dealer_hand[i]][2];
-      current_count +=checkVal(cards[dealer_hand[i]][2]);
     }
-    
+    current_count +=checkVal(cards[dealer_hand[0]][2]);
     int player_cards = 2;
     int dealer_cards = 2;
     
-
-    if(player_total == 21 && dealer_total != 21){
+    print_cards(player_total,player_cards,dealer_total,dealer_cards,player_done,current_count);
+    if(player_total == 21 && dealer_total < 21){
         green();
         printf("BLACKJACK!\nPLAYER WINS!\n");
         reset();
-        exit(3);
+        player_done = true;
+        dealer_done = true;
     }
     else if(dealer_total == 21){
         red();
         printf("Dealer has BLACKJACK\nDEALER WINS!\n");
         reset();
-        exit(4);
+        player_done = true;
+        dealer_done = true;
     }
     else if(player_total == 21 && dealer_total == 21){
         printf("Player and Dealer both have blackjack\nIt is a PUSH!\n");
+        player_done = true;
+        dealer_done = true;
     }
 
     print_cards(player_total,player_cards,dealer_total,dealer_cards,player_done,current_count);
@@ -125,6 +141,7 @@ int main(){
         else if(input == 0){
             printf("\e[1;1H\e[2J");
             printf("\tDEALER PLAYS OUT\n");
+            sleep(1);
             player_done = true;
         } 
         else if(input ==2){
@@ -134,71 +151,88 @@ int main(){
             printf("Not valid input! Try again!\n");
         }
     }while (player_done == false);
-
+    current_count +=checkVal(cards[dealer_hand[1]][2]);
     print_cards(player_total,player_cards,dealer_total,dealer_cards,player_done,current_count);
-    player_done = false;
     do{
       //print_cards(player_total,player_cards,dealer_total,dealer_cards,play);
      if(dealer_total == player_total){
             yellow();
             printf("Player has pushed with Dealer\n");
             reset();
-            player_done = true;
+            dealer_done = true;
         }
-        else if(dealer_total <= 21){
-            if(dealer_total == 21){
-                red();
-                printf("Dealer HIT 21!\n\tDEALER WINS\n");
-                reset();
-                player_done = true;
-            }
-            else if(dealer_total >= 17 && dealer_total >= player_total){
-                red();
-                printf("Dealer's total greater than player's!\n\tDealer WINS\n");
-                reset();
-                player_done = true;
-            }
-            else if(dealer_total >= 17 && dealer_total < player_total){
-                green();
-                printf("Player's total greater than dealer's!\n\tPlayer WINS\n");
-                reset();
-                player_done = true;
-            }
-            else if(dealer_total==17){
-                for(i=0;i< dealer_cards;i++){
-                    if(dealer_hand[i]==11){
-                        dealer_total -= 10;
-                    }
+     else if(dealer_total <= 21){
+        if(dealer_total == 21){
+            red();
+            printf("Dealer HIT 21!\n\tDEALER WINS\n");
+            reset();
+            dealer_done = true;
+        }
+        else if(dealer_total >= 17 && dealer_total >= player_total){
+            red();
+            printf("Dealer's total greater than player's!\n\tDealer WINS\n");
+            reset();
+            dealer_done = true;
+        }
+        else if(dealer_total >= 17 && dealer_total < player_total){
+            green();
+            printf("Player's total greater than dealer's!\n\tPlayer WINS\n");
+            reset();
+            dealer_done = true;
+        }
+        else if(dealer_total==17){
+            for(i=0;i< dealer_cards;i++){
+                if(dealer_hand[i]==11){
+                    dealer_total -= 10;
                 }
             }
-
+        }
 	    else if(dealer_total < 17){
 	      	new_card = card_draw(1) - 1;
-		dealer_hand[dealer_cards] = cards[new_card][1];
-		dealer_total += cards[dealer_hand[dealer_cards]][2];
-                if(cards[new_card][2] == 11 && dealer_total > 21){
-                    dealer_total -= 10;
-		}
-        sleep(1);
-		dealer_cards++;
-		print_cards(player_total,player_cards,dealer_total,dealer_cards,player_done,current_count);
+		    dealer_hand[dealer_cards] = cards[new_card][1];
+		    dealer_total += cards[dealer_hand[dealer_cards]][2];
+            if(cards[new_card][2] == 11 && dealer_total > 21){
+                dealer_total -= 10;
+		    }
+            sleep(1);
+		    dealer_cards++;
+		    print_cards(player_total,player_cards,dealer_total,dealer_cards,player_done,current_count);
 	    }
         else if(dealer_total > 21){
 	    green();
 	    printf("Dealer Bust!\n\tPlayer WINS\n");
-	    player_done = true;
-	}
-	}
-    }while (player_done == false);
-    
-
+        reset();
+	    dealer_done = true;
+	    }
+	  }
+    }while(dealer_done == false);
+    sleep(3);
+    printf("Would you like to play again?\nEnter 1 for yes or 0 for no\nEnter 2 for current card count\nEnter option: ");
+    do{
+        scanf(" %d",&input);
+        if(input == 0){
+            excon = true;
+            play = false;
+        }
+        else if(input == 2){
+            printf("Current High-Lo value: %d\n",current_count);
+            printf("Enter option: ");
+        }
+        else if(input == 1){
+            excon = true;
+        }
+    }while(excon = false);
     //printf("Player total: %d\n",player);
     //printf("Dealer total: %d\n",dealer);
 
-    return 0;
+    
+ }while(play = true);
+
+ return 0;
 }
 
-void print_cards(int player_total,int player_cards,int dealer_total,int dealer_cards,int player_stat,int cardCount){
+
+void print_cards(int player_total,int player_cards,int dealer_total,int dealer_cards,bool player_stat,int cardCount){
 
     int i;
     short card;
@@ -212,15 +246,21 @@ void print_cards(int player_total,int player_cards,int dealer_total,int dealer_c
             high_val_print(card);
         }
         else{
-            if(player_stat == 0 && i = 1){
+            if(player_stat == false && i == 1){
                 printf("? ");
             }
-            printf("%d  ",cards[dealer_hand[i]][1]);
+            else{
+                printf("%d  ",cards[dealer_hand[i]][1]);
+            }
         }
         
     }
-    printf("\nDealer Total: %d\n\n",dealer_total);
-
+    if(player_stat == false){
+        printf("\nDealer Total: %d\n\n",cards[dealer_hand[0]][2]);
+    }
+    else{
+        printf("\nDealer Total: %d\n\n",dealer_total);
+    }
     printf("Player: ");
     for(i = 0; i < player_cards; i++){
         card = cards[player_hand[i]][1];
