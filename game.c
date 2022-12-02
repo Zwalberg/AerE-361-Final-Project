@@ -74,6 +74,7 @@ int main(){
     int player_cards = 2;
     int dealer_cards = 2;
     
+
     print_cards(player_total,player_cards,dealer_total,dealer_cards,play,current_count);
 
     do{
@@ -84,10 +85,11 @@ int main(){
             player_hand[player_cards] = cards[new_card][1];
             player_total += cards[player_hand[player_cards]][2];
             sleep(1);
-            if(cards[new_card][2] == 11 && player_total > 21){
+            for(i=0;i<player_cards;i++){
+            if(cards[i][2] == 11 && player_total > 21){
                 player_total -= 10;
             }
-            
+            }
             //printf("\tDEBUG: NEW_CARD is %d\t%d\n\n",new_card,player_hand[player_cards]);
             player_cards++;
             print_cards(player_total,player_cards,dealer_total,dealer_cards,play,current_count);
@@ -120,12 +122,7 @@ int main(){
     
     do{
       //print_cards(player_total,player_cards,dealer_total,dealer_cards,play);
-        if(dealer_total > 21){
-	    green();
-	    printf("Dealer Bust!\n\tPlayer WINS\n");
-	    play = 0;
-	}
-    else if(dealer_total == player_total){
+     if(dealer_total == player_total){
             yellow();
             printf("Player has pushed with Dealer\n");
             play =0;
@@ -151,6 +148,15 @@ int main(){
 	        printf("Player's total greater than dealer's!\n\tPlayer WINS\n");
 		play = 0;
 	    }
+
+        else if(dealer_total==17){
+        for(i=0;i< dealer_cards;i++){
+        if(dealer_hand[i]==11){
+            dealer_total -= 10;
+        }
+        }
+        }
+
 	    else if(dealer_total < 17){
 	      	new_card = card_draw(1) - 1;
 		dealer_hand[dealer_cards] = cards[new_card][1];
@@ -162,6 +168,11 @@ int main(){
 		dealer_cards++;
 		print_cards(player_total,player_cards,dealer_total,dealer_cards,play,current_count);
 	    }
+        else if(dealer_total > 21){
+	    green();
+	    printf("Dealer Bust!\n\tPlayer WINS\n");
+	    play = 0;
+	}
 	}
     }while (play == 1);
     
