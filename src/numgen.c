@@ -6,8 +6,6 @@
 #include<string.h>
 #include<time.h>
 
-int checkVal();
-
 int card_draw(int count){
     int upper,lower,draw,i;
     time_t t;
