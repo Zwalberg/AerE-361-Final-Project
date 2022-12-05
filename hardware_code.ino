@@ -275,8 +275,7 @@ int game(){
     }
     
     //printf("Cards dealt: %hd\n",cards_dealt);
-
-    player_hand[0] = cards[3][0];
+    player_hand[0] = cards[deal[0]-1][0];
     player_hand[1] = cards[deal[2]-1][0];
     dealer_hand[0] = cards[deal[1]-1][0];
     dealer_hand[1] = cards[deal[3]-1][0];
@@ -318,7 +317,7 @@ int game(){
         scanf(" %d",&input);
         if(buttons & (1<<0)){
             Serial.println("Button A");
-            neokey.pixels.setPixelColor(0, 0xFF0000); // red
+           // neokey.pixels.setPixelColor(0, 0xFF0000); // red
             new_card = card_draw(1) - 1;
             player_hand[player_cards] = cards[new_card][1];
             player_total += cards[new_card][2];
@@ -329,7 +328,7 @@ int game(){
             //printf("\tDEBUG: NEW_CARD is %d\t%d\n\n",new_card,player_hand[player_cards]);
             player_cards++;
             print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand,cards);
-            delay(2000);
+            //delay(2000);
             if(player_total > 21){
                 red();
                 printf("Player Busts!\nDEALER WINS\n");
@@ -344,7 +343,7 @@ int game(){
         }
         else if(buttons & (1<<1)){
           Serial.println("Button B");
-          neokey.pixels.setPixelColor(1, 0xFFFF00); // yellow
+         // neokey.pixels.setPixelColor(1, 0xFFFF00); // yellow
             printf("\e[1;1H\e[2J");
             printf("\tDEALER PLAYS OUT\n");
             play = 0;
@@ -359,10 +358,7 @@ int game(){
     play = 1;
     
     do{
-      //print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand,cards);
-        //red();
-        //printf("\ndealer logic start\n");
-        //reset();
+    
         if(dealer_total == player_total){
             yellow();
             printf("Player has pushed with Dealer\n");
@@ -381,6 +377,7 @@ int game(){
           //losedisplay();
           play = 0;
       }
+  }
       else if(dealer_total >= 17 && dealer_total >= player_total){
           red();
           printf("Dealer's total greater than player's!\n\tDealer WINS\n");
@@ -393,7 +390,7 @@ int game(){
           //windisplay();
     play = 0;
       }
-    }
+    
         
         if(cards[new_card][2] == 11 && dealer_total > 21){
                 dealer_total -= 10;
