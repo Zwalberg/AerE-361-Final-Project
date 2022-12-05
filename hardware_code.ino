@@ -202,7 +202,7 @@ void losedisplay() {
 
 int game(){
   int cards[53][4] = { {0,0,0,0},
-    {1,1,11,0},
+      {1,1,11,0},
       {2,2,2,0},
       {3,3,3,0},
       {4,4,4,0},
@@ -262,7 +262,6 @@ int game(){
     short i,j,player_total,dealer_total,play = 1,new_card;
     int a,b,c,d,input;
     char cards1[100];
-    //FILE * fp;
     
 
     printf("Welcome to Blackjack\n\n");
@@ -276,17 +275,12 @@ int game(){
     }
     
     //printf("Cards dealt: %hd\n",cards_dealt);
-     player_hand[0] = cards[14][0];
-    player_hand[1] = cards[14][0];
-    dealer_hand[0] = cards[15][0];
-    dealer_hand[1] = cards[18][0];
 
-    
-   /* player_hand[0] = cards[deal[0]-1][0];
+    player_hand[0] = cards[3][0];
     player_hand[1] = cards[deal[2]-1][0];
     dealer_hand[0] = cards[deal[1]-1][0];
     dealer_hand[1] = cards[deal[3]-1][0];
-*/
+
     //printf("Player hand: %d  %d\n",player_hand[0],player_hand[1]);
 
     for(i = 0; i < 2; i++){
@@ -295,9 +289,10 @@ int game(){
       dealer_total += cards[dealer_hand[i]][2];
       current_count +=checkVal(cards[dealer_hand[i]][2]);
     }
-    if(cards[new_card][2] == 11 && player_total > 21){
-                player_total -= 10;
+    if(player_total > 21){
+                dealer_total -= 10;
             }
+    
     int player_cards = 2;
     int dealer_cards = 2;
     int dealer_loop=0;
@@ -399,7 +394,12 @@ int game(){
     play = 0;
       }
     }
-     
+        
+        if(cards[new_card][2] == 11 && dealer_total > 21){
+                dealer_total -= 10;
+            }
+
+        
 
       else if(dealer_total < 17){
           new_card = card_draw(1) - 1;
@@ -413,7 +413,7 @@ int game(){
     delay(2000);
     }
 
- else if (dealer_total > 21){
+        else if(dealer_total > 21){
       green();
       printf("Dealer Bust!\n\tPlayer WINS\n");
       //windisplay();
@@ -439,7 +439,6 @@ int game(){
 
     return 0;
 }
-
 
 
 void red() {
