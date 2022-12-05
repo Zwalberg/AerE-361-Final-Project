@@ -22,6 +22,7 @@ void yellow();
 void reset();
 void print_menu();
 void high_val_print(short face);
+void suit_print();
 
 
 int main(){
@@ -56,7 +57,7 @@ int main(){
         exit(3);
     }
 
- do{
+do{
     player_done = false;
     dealer_done = false;
     player_total = 0;
@@ -131,7 +132,8 @@ int main(){
                 red();
                 printf("Player Busts!\nDEALER WINS\n");
                 reset();
-                exit(3);
+                player_done = true;
+                dealer_done = true;
             }
             else if(player_total == 21){
                 printf("Player at 21!\n\tDEALER PLAYS OUT\n");
@@ -198,30 +200,34 @@ int main(){
 		    dealer_cards++;
 		    print_cards(player_total,player_cards,dealer_total,dealer_cards,player_done,current_count);
 	    }
-        else if(dealer_total > 21){
+     }
+     else if(dealer_total > 21){
 	    green();
 	    printf("Dealer Bust!\n\tPlayer WINS\n");
         reset();
 	    dealer_done = true;
-	    }
-	  }
+	 }
+	  
     }while(dealer_done == false);
     sleep(3);
-    printf("Would you like to play again?\nEnter 1 for yes or 0 for no\nEnter 2 for current card count\nEnter option: ");
-    do{
-        scanf(" %d",&input);
+    //printf("Would you like to play again?\nEnter 1 for yes\n Enter 0 for no\nEnter 2 for current card count\nEnter option: ");
+    //scanf("%d ",&input);
+    /*do{
         if(input == 0){
-            excon = true;
             play = false;
+            printf("input = 0");
+            break;
         }
         else if(input == 2){
             printf("Current High-Lo value: %d\n",current_count);
             printf("Enter option: ");
+            scanf("%d ",&input);
         }
         else if(input == 1){
-            excon = true;
+            printf("input = 1");
+            break;
         }
-    }while(excon = false);
+    }while(excon = false);*/
     //printf("Player total: %d\n",player);
     //printf("Dealer total: %d\n",dealer);
 
@@ -244,13 +250,15 @@ void print_cards(int player_total,int player_cards,int dealer_total,int dealer_c
         card = cards[dealer_hand[i]][1];
         if(card == 1 || card > 10){
             high_val_print(card);
+            suit_print(cards[dealer_hand[i]][0]);
         }
         else{
             if(player_stat == false && i == 1){
                 printf("? ");
             }
             else{
-                printf("%d  ",cards[dealer_hand[i]][1]);
+                printf("%d ",cards[dealer_hand[i]][1]);
+                suit_print(cards[dealer_hand[i]][0]);
             }
         }
         
@@ -266,9 +274,11 @@ void print_cards(int player_total,int player_cards,int dealer_total,int dealer_c
         card = cards[player_hand[i]][1];
         if(card == 1 || card > 10){
             high_val_print(card);
+            suit_print(cards[player_hand[i]][0]);
         }
         else{
-            printf("%d  ",cards[player_hand[i]][1]);
+            printf("%d ",cards[player_hand[i]][1]);
+            suit_print(cards[player_hand[i]][0]);
         }
         
     }
@@ -306,6 +316,21 @@ void high_val_print(short face){
         case 13: card_face[0] = 'K'; break;
         default: card_face[0] = 'N'; break;
     }
-    printf("%s  ",card_face);
+    printf("%s",card_face);
    
+}
+
+void suit_print(int card_num){
+    if(card_num <= 13){ 
+        printf("H  ");
+    }
+    else if(card_num <= 26){
+        printf("C  ");
+    }
+    else if(card_num <= 39){
+        printf("D  ");
+    }
+    else{
+        printf("S  "); 
+    }
 }
