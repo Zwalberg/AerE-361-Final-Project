@@ -2,7 +2,7 @@
 Arcada graphicstest (Display, Buttons)
 */
 #include<stdio.h>
-#include<stdlib.h>
+#include<cstdlib>
 #include<string.h>
 #include<time.h>
 #include<unistd.h>
@@ -12,7 +12,6 @@ Arcada graphicstest (Display, Buttons)
 #include <seesaw_neopixel.h>
 Adafruit_Arcada arcada; 
 Adafruit_NeoKey_1x4 neokey;
-
 
 NeoKey1x4Callback blink(keyEvent evt) {
   uint8_t key = evt.bit.NUM;
@@ -79,6 +78,7 @@ uint32_t Wheel(byte WheelPos) {
 }
 
 void print_cards(int player_total,int player_cards,int dealer_total,int dealer_cards,int play,short dealer_hand[], short player_hand[],int cards[][4]) {
+int card;  
   arcada.displayBegin();
   arcada.setBacklight(255);
   arcada.display->fillScreen(ARCADA_BLACK);
@@ -88,13 +88,18 @@ void print_cards(int player_total,int player_cards,int dealer_total,int dealer_c
  arcada.display->println("Dealer:");
  for(int i = 0; i < dealer_cards; i++){   
  arcada.display->setCursor(30*(i),20);
- int card = cards[dealer_hand[i]][1];
+ if (dealer_cards == 1) {
+  card = cards[dealer_hand[1]][1]; 
+ }
+ else {
+ card = cards[dealer_hand[i]][1];
+ }  
  if(card == 1 || card > 10){
     high_val_print(card);
  }
  else {
  arcada.display->println(card);
- }
+ } 
 }
   arcada.display->println("------------");
   arcada.display->setCursor(0,50);
@@ -259,9 +264,10 @@ int game(){
     short player_hand[6];
     short dealer_hand[6];
     short current_count;    
-    short i,j,player_total,dealer_total,play = 1,new_card;
+    short i,j,player_total,dealer_total,new_card;
     int a,b,c,d,input;
     char cards1[100];
+    bool player_done = false,dealer_done = false,play = true,excon = false;
     //FILE * fp;
     /*
     fp = fopen("Card_List.csv","r");
@@ -282,6 +288,12 @@ int game(){
     */
 
     printf("Welcome to Blackjack\n\n");
+do{
+    player_done = false;
+    dealer_done = false;
+    player_total = 0;
+    dealer_total = 0;
+    printf("\e[1;1H\e[2J");
     for (i = 1; i <= 4; i++){
         int index = i-1;
         //printf("Card: %d\n",card_draw(i));
@@ -304,14 +316,35 @@ int game(){
       player_total += cards[player_hand[i]][2]; 
       current_count += checkVal(cards[player_hand[i]][2]);
       dealer_total += cards[dealer_hand[i]][2];
-      current_count +=checkVal(cards[dealer_hand[i]][2]);
     }
+    current_count +=checkVal(cards[dealer_hand[0]][2]);
+        if(player_total > 21){
+                player_total -= 10;
+            }
     
     int player_cards = 2;
     int dealer_cards = 2;
-    int dealer_loop=0;
-    print_cards(player_total,player_cards,cards[dealer_hand[0]][1],1,play,dealer_hand,player_hand,cards);
-
+    print_cards(player_total,player_cards,cards[dealer_hand[1]][2],1,play,dealer_hand,player_hand,cards);
+    if(player_total == 21 && dealer_total < 21){
+        green();
+        printf("BLACKJACK!\nPLAYER WINS!\n");
+        //reset();
+        player_done = true;
+        dealer_done = true;
+    }
+    else if(dealer_total == 21){
+        red();
+        printf("Dealer has BLACKJACK\nDEALER WINS!\n");
+        //reset();
+	player_done = true;
+        dealer_done = true;
+    }
+    else if(player_total == 21 && dealer_total == 21){
+        printf("Player and Dealer both have blackjack\nIt is a PUSH!\n");
+        player_done = true;
+        dealer_done = true;
+    }
+    //print_cards(player_total,player_cards,cards[dealer_hand[1]][2],1,play,dealer_hand,player_hand,cards);
     do{
       //stores button presses
        uint8_t buttons_pressed = arcada.readButtons();
@@ -325,14 +358,14 @@ int game(){
         arcada.setBacklight(255);
         arcada.display->fillScreen(ARCADA_BLACK);
         arcada.display->setTextColor(ARCADA_WHITE);
-        print_cards(player_total,player_cards,cards[dealer_hand[0]][1],1,play,dealer_hand,player_hand,cards);        
+        print_cards(player_total,player_cards,cards[dealer_hand[1]][2],1,play,dealer_hand,player_hand,cards);        
       }
        uint8_t buttons = neokey.read();
         printf("\tEnter 1 to HIT or 0 to STAND: ");
         scanf(" %d",&input);
         if(buttons & (1<<0)){
             Serial.println("Button A");
-            neokey.pixels.setPixelColor(0, 0xFF0000); // red
+            //neokey.pixels.setPixelColor(0, 0xFF0000); // red
             new_card = card_draw(1) - 1;
             player_hand[player_cards] = cards[new_card][1];
             player_total += cards[player_hand[player_cards]][2];
@@ -342,14 +375,15 @@ int game(){
             
             //printf("\tDEBUG: NEW_CARD is %d\t%d\n\n",new_card,player_hand[player_cards]);
             player_cards++;
-            print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand,cards);
-            delay(2000);
+            print_cards(player_total,player_cards,cards[dealer_hand[1]][2],1,play,dealer_hand,player_hand,cards);
+            //delay(2000);
             if(player_total > 21){
                 red();
                 printf("Player Busts!\nDEALER WINS\n");
                 //losedisplay();
                 //reset();
-                exit(3);
+		player_done = true;
+                dealer_done = true;
             }
             else if(player_total == 21){
                 printf("Player at 21!\n\tDEALER PLAYS OUT\n");
@@ -358,21 +392,18 @@ int game(){
         }
         else if(buttons & (1<<1)){
           Serial.println("Button B");
-          neokey.pixels.setPixelColor(1, 0xFFFF00); // yellow
+          //neokey.pixels.setPixelColor(1, 0xFFFF00); // yellow
             printf("\e[1;1H\e[2J");
             printf("\tDEALER PLAYS OUT\n");
-            play = 0;
-        }
-        else{
-            printf("Not valid input! Try again!\n");
+            player_done = true;
         }
           neokey.pixels.show();
-    }while (play == 1);
+    }while (player_done == false);
 
     print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand,cards);
+    //delay(2000);
     play = 1;
-    
-    do{
+    while(dealer_done == false){
       //print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand,cards);
         //red();
         //printf("\ndealer logic start\n");
@@ -380,41 +411,38 @@ int game(){
         if(dealer_total == player_total){
             yellow();
             printf("Player has pushed with Dealer\n");
-            play =0;
+            //reset();
+            dealer_done = true;
         }
-        else if(player_total == 21 && player_cards<=2){
-            green();
-            printf("Player has hit a BlackJack!\n");
-            //windisplay();            
-            play = 0;
-        }
+
 	else if(dealer_total <= 21){
 	    if(dealer_total == 21){
 	        red();
 	        printf("Dealer HIT 21!\n\tDEALER WINS\n");
-          //losedisplay();
-	        play = 0;
+                //losedisplay();
+            dealer_done = true;
 	    }
 	    else if(dealer_total >= 17 && dealer_total >= player_total){
 	        red();
 		      printf("Dealer's total greater than player's!\n\tDealer WINS\n");
           //losedisplay();
-		      play = 0;
+            dealer_done = true;
 	    }
 	    else if(dealer_total >= 17 && dealer_total < player_total){
 	        green();
 	        printf("Player's total greater than dealer's!\n\tPlayer WINS\n");
           //windisplay();
-		play = 0;
+            dealer_done = true;
 	    }
-    }
+
         
-        if(cards[new_card][2] == 11 && dealer_total > 21){
-                dealer_total -= 10;
+        else if(dealer_total==17){
+            for(i=0;i< dealer_cards;i++){
+                if(dealer_hand[i]==11){
+                    dealer_total -= 10;
+                }
             }
-
-        
-
+        }
 	    else if(dealer_total < 17){
 	      	new_card = card_draw(1) - 1;
 		      dealer_hand[dealer_cards] = cards[new_card][1];
@@ -424,33 +452,19 @@ int game(){
 		}
 		dealer_cards++;
 		print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand,cards);
-    delay(2000);
+    //delay(2000);
 	  }
-
+	}
         else if(dealer_total > 21){
 	    green();
 	    printf("Dealer Bust!\n\tPlayer WINS\n");
-      //windisplay();
-	    play = 0;
+	    dealer_done = true;
+	}    
 	}
-
-
-    if(dealer_loop>15){
-        printf("Error: Dealer logic loop, exiting");
-        exit(124);
-    }
-    dealer_loop++;
-
-
-
-
-
-	}while (play == 1);
-    
-
     //printf("Player total: %d\n",player);
     //printf("Dealer total: %d\n",dealer);
 
+ }while(play = true);
     return 0;
 }
 
@@ -497,19 +511,30 @@ void red() {
     neokey.pixels.setPixelColor(2, 0xFF0000); // red
     neokey.pixels.setPixelColor(3, 0xFF0000); // 
     neokey.pixels.show();
+    delay(5000);
+    neokey.pixels.setPixelColor(0, 0); // red
+    neokey.pixels.setPixelColor(1, 0); // red
+    neokey.pixels.setPixelColor(2, 0); // red
+    neokey.pixels.setPixelColor(3, 0); // 
+    neokey.pixels.show();
 }
 
 void green(){
  // printf("\033[1;32m");
     arcada.display->setTextColor(ARCADA_GREEN);
     arcada.display->setTextSize(2);
-     arcada.display->setCursor(100,165);
+    arcada.display->setCursor(100,165);
     arcada.display->println("You Win!"); 
     neokey.pixels.setPixelColor(0, 0x00FF00); // green
     neokey.pixels.setPixelColor(1, 0x00FF00); // green
     neokey.pixels.setPixelColor(2, 0x00FF00); // green
     neokey.pixels.setPixelColor(3, 0x00FF00); // 
     neokey.pixels.show();
+    delay(5000);
+    neokey.pixels.setPixelColor(0, 0); // red
+    neokey.pixels.setPixelColor(1, 0); // red
+    neokey.pixels.setPixelColor(2, 0); // red
+    neokey.pixels.setPixelColor(3, 0);
 }
 
 void yellow(){
@@ -536,10 +561,8 @@ int card_draw(int count){
     upper = 52;
     lower = 1;
 
-    srand(time(NULL));
-
     for(i = 0; i < count; i++){
-        draw = (rand() % (upper - lower + 1)) + lower;
+        draw = random(1,52);
         //printf(" %d",draw);
     }
     //printf("\n");
