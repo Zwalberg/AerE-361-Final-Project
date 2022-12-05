@@ -263,23 +263,7 @@ int game(){
     int a,b,c,d,input;
     char cards1[100];
     //FILE * fp;
-    /*
-    fp = fopen("Card_List.csv","r");
-    if (fp == NULL){
-        fprintf(stderr,"Card list did not open correctly.\nEXITING PROGRAM\n");
-        exit(3);
-    }
-    */
-    /*
-    do{
-        fscanf(fp,"%d,%d,%d,%d",&a,&b,&c,&d);
-        cards[i][0] = a;
-        cards[i][1] = b;
-        cards[i][2] = c;
-        cards[i][3] = d;
-        i++;
-    }while(fgets(cards1,100,fp) != NULL);
-    */
+    
 
     printf("Welcome to Blackjack\n\n");
     for (i = 1; i <= 4; i++){
@@ -292,17 +276,17 @@ int game(){
     }
     
     //printf("Cards dealt: %hd\n",cards_dealt);
-    /* player_hand[0] = cards[51][0];
-    player_hand[1] = cards[53][0];
-    dealer_hand[0] = cards[0][0];
-    dealer_hand[1] = cards[0][0];
-*/
+     player_hand[0] = cards[14][0];
+    player_hand[1] = cards[14][0];
+    dealer_hand[0] = cards[15][0];
+    dealer_hand[1] = cards[18][0];
+
     
-    player_hand[0] = cards[deal[0]-1][0];
+   /* player_hand[0] = cards[deal[0]-1][0];
     player_hand[1] = cards[deal[2]-1][0];
     dealer_hand[0] = cards[deal[1]-1][0];
     dealer_hand[1] = cards[deal[3]-1][0];
-
+*/
     //printf("Player hand: %d  %d\n",player_hand[0],player_hand[1]);
 
     for(i = 0; i < 2; i++){
@@ -311,7 +295,9 @@ int game(){
       dealer_total += cards[dealer_hand[i]][2];
       current_count +=checkVal(cards[dealer_hand[i]][2]);
     }
-    
+    if(cards[new_card][2] == 11 && player_total > 21){
+                player_total -= 10;
+            }
     int player_cards = 2;
     int dealer_cards = 2;
     int dealer_loop=0;
@@ -413,12 +399,7 @@ int game(){
     play = 0;
       }
     }
-        
-        if(cards[new_card][2] == 11 && dealer_total > 21){
-                dealer_total -= 10;
-            }
-
-        
+     
 
       else if(dealer_total < 17){
           new_card = card_draw(1) - 1;
@@ -432,7 +413,7 @@ int game(){
     delay(2000);
     }
 
-        else if(dealer_total > 21){
+ else if (dealer_total > 21){
       green();
       printf("Dealer Bust!\n\tPlayer WINS\n");
       //windisplay();
@@ -459,36 +440,6 @@ int game(){
     return 0;
 }
 
-/* print_cards(player_total,player_cards,dealer_total,dealer_cards,play,dealer_hand,player_hand,cards);{
-    int i;
-    short card;
-    
-    printf("\e[1;1H\e[2J");
-    printf("Dealer: ");
-    for(i = 0; i < dealer_cards; i++){
-        card = cards[dealer_hand[i]][1];
-        if(card == 1 || card > 10){
-            high_val_print(card);
-        }
-        else{
-            printf("%d  ",cards[dealer_hand[i]][1]);
-        }
-        
-    }
-    printf("\nDealer Total: %d\n\n",dealer_total);
-    printf("Player: ");
-    for(i = 0; i < player_cards; i++){
-        card = cards[player_hand[i]][1];
-        if(card == 1 || card > 10){
-            high_val_print(card);
-        }
-        else{
-            printf("%d  ",cards[player_hand[i]][1]);
-        }
-        
-    }
-    printf("\nPlayer Total: %d\n",player_total);
-} */
 
 
 void red() {
