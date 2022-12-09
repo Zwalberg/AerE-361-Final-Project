@@ -1,0 +1,12 @@
+The libraries used for this project are listed below:
+C Libraries:
+-stdio
+-cstdlib
+-string
+-time
+-unistd
+
+Arduino:
+-Adafruit_Arcada 
+-Adafruit_NeoKey_1x4   
+-seesaw_neopixel
