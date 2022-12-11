@@ -2,7 +2,7 @@
 
 Welcome to Team 10's final project for Iowa State University's AER E 361 course!
 
-The team decided to create a virtual Blackjack game and pair it with a card counting system. This repository includes the C code and Arduino code to run the Blckjack game as well as the documentation for designing and playing the game.
+The team decided to create a virtual Blackjack game and pair it with a card counting system. This repository includes the C code and Arduino code to run the Blackjack game as well as the documentation for designing and playing the game.
 
 This 6 person team was split into two smaller subteams in order to maximize efficiency. The two teams can be seen below.
 
